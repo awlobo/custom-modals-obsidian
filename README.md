@@ -24,7 +24,7 @@ Creating a modal is simple, here are the steps:
 	- cancelText: Text of your Cancel button
 4. Write your `HTML` for the Modal Content in a code block with the class name `html`.
 5. Write your `handleOk` function in a code block with the class name `javascript`.
-6. Write your `handleCancel` function in a code block with the class name `javascript`.
+6. Write your `handleCancel` (if needed) function in a code block with the class name `javascript`.
 7. Write your `preRender` (if needed) function in a code block with the class name `javascript`.
 8. Write your `postRender` (if needed) function in a code block with the class name `javascript`.
 9. Run your modal by hitting CTRL + P for Windows, or CMD + P for MacOS and Type "Open YOUR_MODAL_TITLE_HERE".
