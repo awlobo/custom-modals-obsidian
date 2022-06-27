@@ -30,6 +30,9 @@ Creating a modal is simple, here are the steps:
 9. Run your modal by hitting CTRL + P for Windows, or CMD + P for MacOS and Type "Open YOUR_MODAL_TITLE_HERE".
 10. Enjoy your Custom Modal!
 
+### Boiler Plate Example
+![boiler-plate-custom-modal](https://i.imgur.com/ADqBxuI.png)
+
 ### Examples
 All examples can be found [here](https://github.com/helloitsian/custom-modals-obsidian/tree/master/examples).
 Simply click on the example you want and then click on "Raw" on the top right.
