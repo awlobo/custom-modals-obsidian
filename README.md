@@ -32,4 +32,4 @@ Creating a modal is simple, here are the steps:
 
 ### Examples
 All examples can be found [here](https://github.com/helloitsian/custom-modals-obsidian/tree/master/examples).
-Simply click on the example your want and then click on "Raw" on the top right.
+Simply click on the example you want and then click on "Raw" on the top right.
