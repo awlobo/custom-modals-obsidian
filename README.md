@@ -10,8 +10,8 @@ This Plugin runs code that you enter through your notes. Please only run Custom 
 1. All metadata is written in the frontmatter of the note.
 2. All code is written in code blocks labelled `html` or `javascript` respectively.
 3. The JavaScript functions must be in order of `handleOk` -> `handleCancel` -> `preRender` -> `postRender`. You cannot skip a function.
-4. The `preRender` function happens **before** the modal content is renderred, handle side effects like fetching data here.
-5. The `postRender` function happens **after** the modal content is renderred, attatch your event listeners and do your other modal content dependant stuff here.
+4. The `preRender` function happens **before** the modal content is rendered, handle side effects like fetching data here.
+5. The `postRender` function happens **after** the modal content is rendered, attach your event listeners and do your other modal content dependant stuff here.
 6. Shared state between functions is handled through the `ctx` object passed to each function as the first parameter. It's not advised to store variables in the `window` object due to possible naming collisions with Obsidian's code.
 
 ### Your First Custom Modal
