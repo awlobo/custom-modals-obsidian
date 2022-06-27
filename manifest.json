@@ -1,0 +1,10 @@
+{
+	"id": "custom-modals-obsidian",
+	"name": "Custom Modals",
+	"version": "1.0.0",
+	"minAppVersion": "0.12.0",
+	"description": "A plugin that let's your write Custom Modals straight from your notes!",
+	"author": "Obsidian",
+	"authorUrl": "https://github.com/helloitsian",
+	"isDesktopOnly": false
+}
