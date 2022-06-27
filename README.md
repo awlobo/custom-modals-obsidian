@@ -2,6 +2,10 @@
 Custom Modals is an [Obsidian](https://obsidian.md/) plugin that allows you to create powerful customized modals within your notes.
 
 ## Getting Started
+
+### Disclaimer
+This Plugin runs code that you enter through your notes, please only run Custom Modal notes from trusted sources and/or review the code prior to running it.
+
 ### Concepts
 1. All metadata is written in the frontmatter of the note.
 2. All code is written in code blocks labelled `html` or `javascript` respectively.
