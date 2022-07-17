@@ -1,4 +1,4 @@
-import { App } from "obsidian";
+import { App, TFolder } from "obsidian";
 
 class FilesManager {
   app: App;
@@ -15,12 +15,22 @@ class FilesManager {
     }
   }
 
-  async getAllFiles() {
-    const filesData: any = await Promise.all(
-      this.app.vault.getMarkdownFiles().map(async (file) => (await this.getExtraFileData(file)))
-    );
-    
-    return filesData;
+  async getModalFiles() {
+    const root = this.app.vault.getRoot();
+    // hack that let's us get the modals folder children
+    const modalsFolder: TFolder = { 
+      children: [], 
+      isRoot: () => false, 
+      ...root.children.find((child) => child.name === "modals")
+    };
+    // get all the modals files
+    const modalFiles = modalsFolder.children.map((child) => app.vault.getAbstractFileByPath(child.path));
+
+    // return the modal files + extra data
+    return await Promise.all(modalFiles.map(async (file) => {
+      const extraData = await this.getExtraFileData(file);
+      return extraData;
+    }));
   }
   
 }

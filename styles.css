@@ -1,0 +1,11 @@
+.custom-modal-content {
+  padding: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+}

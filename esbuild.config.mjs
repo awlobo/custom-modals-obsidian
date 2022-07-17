@@ -59,8 +59,9 @@ esbuild.build({
 })
 .then(() => {
   console.log("Built for dev testing!");
-  fs.copyFileSync("./main.js", `${PLUGIN_PATH_MACOS}/main.js`);
-  fs.copyFileSync("./manifest.json", `${PLUGIN_PATH_MACOS}/manifest.json`);
+  fs.copyFileSync("./main.js", `${PLUGIN_PATH_WINDOWS}/main.js`);
+  fs.copyFileSync("./manifest.json", `${PLUGIN_PATH_WINDOWS}/manifest.json`);
+  fs.copyFileSync("./manifest.json", `${PLUGIN_PATH_WINDOWS}/styles.css`);
   process.exit();
 })
 .catch(() => process.exit(1));

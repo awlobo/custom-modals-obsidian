@@ -1,12 +1,16 @@
-import { Modal, Notice, Plugin } from "obsidian";
-import { removeNode } from "src/util";
+import { App, Modal, Notice, Plugin } from "obsidian";
 import { CustomModalSettingsInterface } from "./CustomModalSettings";
+
+export interface ObsidianAPI {
+  app: App,
+  plugin: Plugin,
+  Notice: typeof Notice,
+}
 
 class CustomModal extends Modal {
 	plugin: Plugin;
 	customModalSettings: CustomModalSettingsInterface;
-	eventListenerRemoverQueue: [() => void] = [() => {}];
-
+  
 	constructor(
 		plugin: Plugin,
 		customModalSettings: CustomModalSettingsInterface
@@ -26,25 +30,10 @@ class CustomModal extends Modal {
 		}
 	}
 
-	renderModal() {
-		const titleTextNode = document.createTextNode(this.customModalSettings.title);
-		this.titleEl.appendChild(titleTextNode)
-
-		this.contentEl.createEl("style", { 
-			text: `
-				.custom-modal-content {
-					padding: 2em;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-				}
-
-				.custom-modal-footer {
-					display: flex;
-					justify-content: flex-end;
-				}
-			` 
-		})
+	renderModal(ctx: any, obsidian: ObsidianAPI) {
+		this.titleEl.createEl("span", {
+      text: this.customModalSettings.title,
+    });
 
 		this.contentEl.createDiv({
 			cls: "custom-modal-content",
@@ -62,6 +51,8 @@ class CustomModal extends Modal {
 		cancelButton.appendChild(cancelText);
 		cancelButton.setAttribute("class", "modal-cancel-btn");
 
+    this.attatchEventListeners(ctx, obsidian, okButton, cancelButton);
+
 		const modalFooter = this.contentEl.createDiv({
 			cls: "custom-modal-footer",
 		})
@@ -70,34 +61,22 @@ class CustomModal extends Modal {
 		modalFooter.appendChild(cancelButton);
 	}
 
-	attatchEventListeners(ctx: any, obsidian: any) {
-		const okButton = this.contentEl.querySelector(".modal-ok-btn");
-		const cancelButton = this.contentEl.querySelector(
-			".modal-cancel-btn"
-		);
-
-		const okButtonEventListener: [string, () => {}] = ["click", async () => {
+	attatchEventListeners(ctx: any, obsidian: ObsidianAPI, okButton: HTMLButtonElement, cancelButton: HTMLButtonElement) {
+		this.plugin.registerDomEvent(okButton, "click", async () => {
 			if (this.customModalSettings.handleOk)
         this.customModalSettings.handleOk(ctx, obsidian);
 			this.close();
-		}]
-		okButton.addEventListener(...okButtonEventListener);
-		// add closure to clean up event listeners
-		this.eventListenerRemoverQueue.push(() => okButton.removeEventListener(...okButtonEventListener));
+		});
 
-		const cancelButtonEventListener: [string, () => {}] = ["click", async () => {
+		this.plugin.registerDomEvent(cancelButton, "click", async () => {
 			if (this.customModalSettings.handleCancel)
         this.customModalSettings.handleCancel(ctx, obsidian);
 			this.close();
-		}]
-		cancelButton.addEventListener(...cancelButtonEventListener);
-		// add closure to clean up event listeners
-		this.eventListenerRemoverQueue.push(() => cancelButton.removeEventListener(...cancelButtonEventListener));
+		});
 	}
 
 	resetModal() {
 		this.clearModalContent();
-		this.removeEventListeners();
 	}
 
 	clearModalContent() {
@@ -105,13 +84,9 @@ class CustomModal extends Modal {
 		this.contentEl.innerHTML = "";
 	}
 
-	removeEventListeners() {
-		this.eventListenerRemoverQueue.forEach((remover) => remover());
-	}
-
 	async onOpen() {
 		const ctx = this.customModalSettings.ctx;
-		const obsidian = {
+		const obsidian: ObsidianAPI = {
 			app: this.app,
 			plugin: this.plugin,
 			Notice,
@@ -119,8 +94,7 @@ class CustomModal extends Modal {
 
 		try {
 			await this.customModalSettings.preRender(ctx, obsidian)
-			this.renderModal();
-			this.attatchEventListeners(ctx, obsidian);
+			this.renderModal(ctx, obsidian);
 			this.customModalSettings.postRender(ctx, obsidian);
 		} catch(err) {
 			console.error(err);

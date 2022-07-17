@@ -5,7 +5,6 @@ import ModalsManager from "./modalsManager/ModalsManager";
 export default class CustomModalsPlugin extends Plugin {
 	filesManager: FilesManager;
 	modalsManager: ModalsManager;
-	eventListenerRemoverQueue: [() => void] = [() => {}];
 
 	constructor(app: App, manifest: PluginManifest) {
 		super(app, manifest);
@@ -34,27 +33,22 @@ export default class CustomModalsPlugin extends Plugin {
 	}
 
 	async onload() {
-		console.log("Loaded Custom Modals");
-		// get data of all files
-		const allFiles = await this.filesManager.getAllFiles();
-
-		// create modals
-		this.modalsManager.createModals(allFiles);
+    const modalFiles = await this.filesManager.getModalFiles();
+    modalFiles.forEach((file) => {
+      this.modalsManager.createModal(file);
+    });
 
     // allow modals to be initialized on file create
-		this.app.vault.on("create", this.handleCreateAndModify);
-		this.eventListenerRemoverQueue.push(() => this.app.vault.off("create", this.handleCreateAndModify));
+    this.registerEvent(this.app.vault.on("create", this.handleCreateAndModify));
 
     // allow modals to be initialized on file edit
-		this.app.vault.on("modify", this.handleCreateAndModify);
-		this.eventListenerRemoverQueue.push(() => this.app.vault.off("modify", this.handleCreateAndModify));
+    this.registerEvent(this.app.vault.on("modify", this.handleCreateAndModify));
 
     // initialize modals on file cache resolve for handling startup
-    this.app.metadataCache.on('resolve', this.handleCacheResolve);
-		this.eventListenerRemoverQueue.push(() => this.app.vault.off("resolve", this.handleCacheResolve));	
+    this.registerEvent(this.app.metadataCache.on('resolve', this.handleCacheResolve));
+
+    console.log("Loaded Custom Modals");
 	}
 
-	onunload(): void {
-		this.eventListenerRemoverQueue.forEach((remover) => remover());
-	}
+	onunload(): void {}
 }
